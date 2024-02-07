@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 
-
 const employeeSchema = new mongoose.Schema({
     id: {
       type: String,
@@ -31,7 +30,7 @@ const ServiceSchema = new mongoose.Schema({
       },
       image: {
         type: String,
-        default: '', // You can set a default value for the image path
+        default: '', 
       },
       id_categorie: {
         type: String,
@@ -50,7 +49,7 @@ const ServiceSchema = new mongoose.Schema({
         required: true,
       },
       employe: {
-        type: [employeeSchema], // Array of employees
+        type: [employeeSchema], 
       }
 },{collection:'service'})
 

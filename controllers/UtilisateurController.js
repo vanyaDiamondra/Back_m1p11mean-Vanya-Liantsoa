@@ -7,7 +7,8 @@ const getUtilisateur = async (req, res, next) => {
   try {
     const utilisateurs = await UtilisateurModel.find();
     res.json(utilisateurs);
-  } catch (err) {
+  } 
+  catch (err) {
     throw err.message;
   }
 };
@@ -87,9 +88,6 @@ const verification = async(req, res, next) => {
    
   });
 }
-
-
-
 
 
 module.exports = { getUtilisateur, inscription,login };

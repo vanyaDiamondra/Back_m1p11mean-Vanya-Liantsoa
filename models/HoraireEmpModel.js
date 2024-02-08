@@ -19,5 +19,5 @@ const HoraireEmpSchema = new mongoose.Schema({
       }
 },{collection:'horaire_emp'})
 
-const HoraireEmp = mongoose.model('HoraireEmp', HoraireEmpSchema);
+const HoraireEmp = mongoose.model('horaire_emp', HoraireEmpSchema);
 module.exports = HoraireEmp;

@@ -7,5 +7,5 @@ const ServiceCategorieSchema = new mongoose.Schema({
       }
 },{collection:'service_categorie'})
 
-const ServiceCategorie = mongoose.model('ServiceCategorie', ServiceCategorieSchema);
+const ServiceCategorie = mongoose.model('service_categorie', ServiceCategorieSchema);
 module.exports = ServiceCategorie;

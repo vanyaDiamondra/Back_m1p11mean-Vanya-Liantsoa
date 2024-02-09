@@ -2,6 +2,7 @@ const UtilisateurModel = require("../models/UtilisateurModel");
 const mongoose = require("mongoose");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const secretKey = require("../db/TokenKey");
 
 const getUtilisateur = async (req, res, next) => {
   try {
@@ -13,7 +14,7 @@ const getUtilisateur = async (req, res, next) => {
   }
 };
 
-const inscription= async (req, res, next) => {
+const inscription = async (req, res, next) => {
   try {
     const {nom,prenom,contact,email,sexe,date_naissance,mdp} = req.body;
 
@@ -29,8 +30,6 @@ const inscription= async (req, res, next) => {
       return res.status(400).json({ message: 'Date de naissance invalide' });
     }
 
-    
-
     //enregistrement
     const mdphashe = await bcrypt.hash(mdp, 10);
     const utilisateur = new UtilisateurModel({ nom,prenom,contact,email,sexe,date_naissance,mdp:mdphashe,type:1,photo:""});
@@ -41,18 +40,18 @@ const inscription= async (req, res, next) => {
   }
 };
 
-const login= async (req, res, next) => {
+const login = async (req, res, next) => {
   try {
     const { email, mdp } = req.body;
     const utilisateur = await UtilisateurModel.findOne({ email });
     if (!utilisateur) {
-      return res.status(401).json({ message: 'email invalide' });
+      return res.status(401).json({ message: 'Email invalide' });
     }
     const mdpValide = await bcrypt.compare(mdp, utilisateur.mdp);
     if (!mdpValide) {
-      return res.status(401).json({ message: 'mot de passe invalide' });
+      return res.status(401).json({ message: 'Mot de passe invalide' });
     }
-    const token = jwt.sign({ userId: utilisateur._id }, 'salon', { expiresIn: 86400 });
+    const token = jwt.sign({ userId: utilisateur._id }, secretKey, { expiresIn: 86400 });
     res.status(200).json({ status: "200",message: 'Vous êtes connecté', token: token });    
     //res.json({ token });
   } catch (error) {
@@ -69,7 +68,7 @@ const verification = async(req, res, next) => {
   }
  
 
-  jwt.verify(token, 'salon' , (err, decoded) => {
+  jwt.verify(token, secretKey , (err, decoded) => {
     if(err){
       if (err.name === 'TokenExpiredError') {
         return res.status(401).json({message: 'Token expirée '+token });
@@ -83,9 +82,6 @@ const verification = async(req, res, next) => {
       res.status(200).json({ tokenFromDb });
       next();
     }
-    
-
-   
   });
 }
 

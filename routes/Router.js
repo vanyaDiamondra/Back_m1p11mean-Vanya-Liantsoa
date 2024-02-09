@@ -14,6 +14,7 @@ router.get('/utilisateur',utilisateurController.getUtilisateur);
 router.get('/service', serviceController.getServices);
 router.get('/service/search', serviceController.searchServices);
 router.get('/service/categories', serviceController.getCategorieServices);
+router.get('/service/client', serviceController.getEmployePrefereeUser);
 
 router.get('/offrespeciale', offreSpecialController.getOffres);
 

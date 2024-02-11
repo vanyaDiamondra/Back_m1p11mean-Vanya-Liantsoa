@@ -2,7 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const routes = require('./routes/Router');
 const cors = require('cors');
-const connectDB = require('./db/Connection')
+const connectDB = require('./db/Connection');
+const { checkRappelEmail } = require('./services/RdvService');
 connectDB()
 
 const app = express();
@@ -15,6 +16,12 @@ app.use(cors({
     optionsSuccessStatus: 200,
   }));
   
+
+(async () => {
+    while (true) {
+      await checkRappelEmail();
+    }
+  })();
 
 app.use((err, req, res, next) => {
     console.error(err.stack);

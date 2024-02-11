@@ -1,5 +1,20 @@
 const mongoose = require('mongoose')
 
+const employeeSchema = new mongoose.Schema({
+  id: {
+    type: String,
+    required: true,
+  },
+  nom: {
+    type: String,
+    required: true,
+  },
+  prenom: {
+    type: String,
+    required: true,
+  },
+});
+
 const HoraireEmpSchema = new mongoose.Schema({
     employe: {
         type: employeeSchema,
@@ -19,5 +34,5 @@ const HoraireEmpSchema = new mongoose.Schema({
       }
 },{collection:'horaire_emp'})
 
-const HoraireEmp = mongoose.model('HoraireEmp', HoraireEmpSchema);
+const HoraireEmp = mongoose.model('horaire_emp', HoraireEmpSchema);
 module.exports = HoraireEmp;

@@ -7,7 +7,7 @@ const getPreferenceEmployeParService =  async (userId, service)  => {
     let result = [];
 
     for (let employe of employeList) {
-        const employePreferences = prefEmployeService.find(pref => pref.employe._id === employe.id);
+        const employePreferences = prefEmployeService.find(pref => pref.employe._id === employe._id);
         const score = employePreferences ? employePreferences.note : 0;
 
         const employeObject = employe.toObject();

@@ -1,5 +1,4 @@
 const UtilisateurModel = require("../models/UtilisateurModel");
-const mongoose = require("mongoose");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const secretKey = require("../db/TokenKey");

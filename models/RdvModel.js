@@ -1,44 +1,7 @@
 const mongoose = require('mongoose')
 
-
 const serviceSchema = new mongoose.Schema({
-    id_service: {
-      type: String,
-      required: true,
-    },
-    nom_service: {
-      type: String,
-      required: true,
-    },
-    id_employe: {
-      type: String,
-      required: true,
-    },
-    nom_employe: {
-      type: String,
-      required: true,
-    },
-    prenom_employe: {
-      type: String,
-      required: true,
-    },
-    date: {
-      type: Date,
-      required: true,
-    },
-    heure_debut: {
-      type: String, 
-      required: true,
-    },
-    heure_fin: {
-      type: String, 
-      required: true,
-    },
-  });
-  
-
-  const clientSchema = new mongoose.Schema({
-    id: {
+    _id: {
       type: String,
       required: true,
     },
@@ -46,15 +9,59 @@ const serviceSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
-    prenom: {
-      type: String,
+    duree: {
+      type: Number, 
       required: true,
     },
-  });
+    image: {
+      type: String,
+      required: true
+    },
+    prix: {
+      type: Number, 
+      required: true,
+    },
+    commission: {
+      type: Number, 
+      required: true,
+    },
+});
+
+const clientSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    required: true,
+  },
+  nom: {
+    type: String,
+    required: true,
+  },
+  prenom: {
+    type: String,
+    required: true,
+  },
+});
 
 const RdvSchema = new mongoose.Schema({
     client: clientSchema,
-    services: [serviceSchema],
+    service: serviceSchema,
+    employe: clientSchema,
+    date: {
+      type: Date,
+      required: true,
+    },
+    heure_debut: {
+      type: Date,
+      required: true,
+    }, 
+    heure_fin: {
+      type: Date, 
+      required: true,
+    },
+    emailEnvoye: {
+      type: Boolean,
+      default: false
+    }
 },{collection:'rdv'})
 
 const Rdv = mongoose.model('rdv', RdvSchema);

@@ -4,6 +4,8 @@ const router = express.Router();
 const utilisateurController = require('../controllers/UtilisateurController');
 const serviceController =  require('../controllers/ServiceController');
 const offreSpecialController =  require('../controllers/OffreSpecialController');
+const prefServiceController = require('../controllers/PrefServiceController');
+const sendMail=require('../controllers/MailController');
 
 
 router.get('/utilisateur',utilisateurController.getUtilisateur);
@@ -17,6 +19,10 @@ router.get('/service/categories', serviceController.getCategorieServices);
 router.get('/service/client', serviceController.getEmployePrefereeUser);
 
 router.get('/offrespeciale', offreSpecialController.getOffres);
+
+
+router.post('/service/ajoutpref/:id',prefServiceController.ajoutPref);
+router.post('/sendmail',sendMail.sendConfirmationEmail);
 
 
 module.exports = router;

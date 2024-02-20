@@ -45,7 +45,7 @@ const login = async (req, res, next) => {
     const { email, mdp } = req.body;
     const utilisateur = await UtilisateurModel.findOne({ email });
     if (!utilisateur) {
-      return res.status(401).json({ message: 'Email invalide' });
+      return res.status(401).json({ message: email });
     }
     const mdpValide = await bcrypt.compare(mdp, utilisateur.mdp);
     if (!mdpValide) {

@@ -25,7 +25,7 @@ module.exports = {
       const mailOptions = {
         from: '"Your Company Name" <yourcompanyemail@gmail.com>',
         to: newUserEmail,
-        subject: "Welcome to Our App! Confirm Your Email",
+        subject: "Bienvenue dans notre application veuillez, confirmer votre email! ",
         text: "Click the link to confirm your email.",
         // You can also include an HTML version of the email
          html: "<p>Click the link to confirm your email.</p>",

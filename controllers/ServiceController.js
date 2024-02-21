@@ -1,7 +1,7 @@
 const ServiceModel = require("../models/ServiceModel");
 const ServiceCategorieModel = require("../models/ServiceCategorieModel");
 const jwt = require('jsonwebtoken');
-const secretKey = require("../db/TokenKey");
+const {secretKey} = require("../db/TokenKey");
 const { getPreferenceEmployeParService } = require('../services/ServiceSalonService');
 
 const getCategorieServices = async (req, res, next) => {

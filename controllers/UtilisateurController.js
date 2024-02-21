@@ -1,7 +1,11 @@
 const UtilisateurModel = require("../models/UtilisateurModel");
+const Token = require("../models/Token");
+const mongoose = require("mongoose");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const secretKey = require("../db/TokenKey");
+const crypto = require("crypto");
+const {secretKey,base_url} = require("../db/TokenKey");
+const sendEmail = require("../services/EmailService");
 
 const getUtilisateur = async (req, res, next) => {
   try {
@@ -15,6 +19,7 @@ const getUtilisateur = async (req, res, next) => {
 
 const inscription = async (req, res, next) => {
   try {
+    
     const {nom,prenom,contact,email,sexe,date_naissance,mdp} = req.body;
 
     //Vérification champ vide
@@ -29,11 +34,30 @@ const inscription = async (req, res, next) => {
       return res.status(400).json({ message: 'Date de naissance invalide' });
     }
 
+    //Vérification si mail déjà existance
+    const user = await UtilisateurModel.findOne({ email });
+		if (!user)
+			return res.status(401).send({ message: "Email déjà existante" });
+
     //enregistrement
     const mdphashe = await bcrypt.hash(mdp, 10);
     const utilisateur = new UtilisateurModel({ nom,prenom,contact,email,sexe,date_naissance,mdp:mdphashe,type:1,photo:""});
     await utilisateur.save();
-    res.status(201).json({ message: 'Utilisateur bien enregistrer' });
+    //res.status(201).json({ message: 'Utilisateur bien enregistrer' });
+
+
+    const token = await new Token({
+			userId: utilisateur._id,
+			token: crypto.randomBytes(32).toString("hex"),
+		}).save();
+		const url = `${base_url}/${user.id}/verify/${token.token}`;
+		await sendEmail(user.email, "Verify Email", url);
+
+		return res
+			.status(201)
+			.send({ message: "An Email sent to your account please verify" });
+
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -50,11 +74,30 @@ const login = async (req, res, next) => {
     if (!mdpValide) {
       return res.status(401).json({ message: 'Mot de passe invalide' });
     }
+    if (!utilisateur.verified) {
+			let token = await Token.findOne({ userId: utilisateur._id });
+			if (!token) {
+      
+        await sendEmail(user.email, "Verify Email", url);
+				token = await new Token({
+					userId: user._id,
+					token: crypto.randomBytes(32).toString("hex"),
+				}).save();
+
+        const url = `${base_url}/${user.id}/verify/${token.token}`;
+				//const url = `${process.env.BASE_URL}users/${user.id}/verify/${token.token}`;
+				await sendEmail(user.email, "Verify Email", url);
+			}
+
+			return res
+				.status(400)
+				.send({ message: "Un email vous a été envoyer veuillez verifier votre compte" });
+		}
     const token = jwt.sign({ userId: utilisateur._id }, secretKey, { expiresIn: 86400 });
-    res.status(200).json({ status: "200",message: 'Vous êtes connecté', token: token });    
+    return res.status(200).json({ status: "200",message: 'Vous êtes connecté', token: token });    
     //res.json({ token });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur de connexion' });
+    res.status(500).json({ message: error.message });
   }
   
 };
@@ -84,5 +127,29 @@ const verification = async(req, res, next) => {
   });
 }
 
+const urlVerify = async(req,res,next)=>{
+  try {
+		const user = await UtilisateurModel.findOne({ _id: req.params.id });
+		if (!user) return res.status(400).send({ message: "Lien invalide" });
 
-module.exports = { getUtilisateur, inscription,login };
+    console.log(req.params.token);
+
+		const token = await Token.findOne({
+			userId: user._id,
+			token: req.params.token,
+		});
+    
+		if (!token) return res.status(400).send({ message: "Lien invalide" });
+
+		await UtilisateurModel.updateOne({ _id: user._id }, { verified: true });
+		//await token.delete();
+    const deletedToken = await Token.findByIdAndDelete(token._id);
+
+		return res.status(200).send({ message: "Email vérifié avec succès" });
+	} catch (error) {
+		return res.status(500).send({ message: error.message });
+	}
+}
+
+
+module.exports = { getUtilisateur, inscription,login,verification ,urlVerify};

@@ -10,9 +10,8 @@ const sendMail=require('../controllers/MailController');
 const rdvCotronller =  require('../controllers/RdvController');
 
 router.get('/utilisateur',utilisateurController.getUtilisateur);
-router.post('/inscription',utilisateurController.inscription);
+router.post('/user/inscription',utilisateurController.inscription);
 router.post('/user/login',utilisateurController.login);
-router.get('/utilisateur',utilisateurController.getUtilisateur);
 
 router.get('/service', serviceController.getServices);
 router.get('/service/search', serviceController.searchServices);
@@ -27,6 +26,8 @@ router.get('/rdv', rdvCotronller.historique);
 
 router.post('/service/ajoutpref/:id',prefServiceController.ajoutPref);
 router.post('/sendmail',sendMail.sendConfirmationEmail);
+
+router.get('/:id/verify/:token',utilisateurController.urlVerify);
 
 
 module.exports = router;

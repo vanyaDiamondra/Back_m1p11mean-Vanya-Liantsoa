@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken');
 const UtilisateurModel = require('../models/UtilisateurModel');
+const secretKey = require("../db/TokenKey");
 const getUserByToken = async (token) => {
     try {
       
-        const decoded = jwt.verify(token, 'salon');
+        const decoded = jwt.verify(token, secretKey);
         const userId = decoded.userId;
 
         

@@ -37,7 +37,11 @@ const UtilisateurSchema = new mongoose.Schema({
       photo: {
         type: String,
         default: '', 
-      }
+      },
+      verified: { 
+        type: Boolean, 
+        default: false 
+      },
 },{collection:'utilisateur'})
 
 const Utilisateur = mongoose.model('utilisateur', UtilisateurSchema);

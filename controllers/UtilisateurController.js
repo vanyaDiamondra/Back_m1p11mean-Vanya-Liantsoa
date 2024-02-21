@@ -36,7 +36,7 @@ const inscription = async (req, res, next) => {
 
     //Vérification si mail déjà existance
     const user = await UtilisateurModel.findOne({ email });
-		if (!user)
+		if (user)
 			return res.status(401).send({ message: "Email déjà existante" });
 
     //enregistrement
@@ -50,12 +50,12 @@ const inscription = async (req, res, next) => {
 			userId: utilisateur._id,
 			token: crypto.randomBytes(32).toString("hex"),
 		}).save();
-		const url = `${base_url}/${user.id}/verify/${token.token}`;
-		await sendEmail(user.email, "Verify Email", url);
+		const url = `${base_url}/${utilisateur._id}/verify/${token.token}`;
+		await sendEmail(utilisateur.email, "Verify Email", url);
 
 		return res
 			.status(201)
-			.send({ message: "An Email sent to your account please verify" });
+			.send({ message: "Un email vous a été envoyer veuillez verifier votre compte" });
 
 
   } catch (error) {
@@ -78,15 +78,15 @@ const login = async (req, res, next) => {
 			let token = await Token.findOne({ userId: utilisateur._id });
 			if (!token) {
       
-        await sendEmail(user.email, "Verify Email", url);
+        await sendEmail(utilisateur.email, "Verify Email", url);
 				token = await new Token({
-					userId: user._id,
+					userId: utilisateur._id,
 					token: crypto.randomBytes(32).toString("hex"),
 				}).save();
 
-        const url = `${base_url}/${user.id}/verify/${token.token}`;
+        const url = `${base_url}/${utilisateur._id}/verify/${token.token}`;
 				//const url = `${process.env.BASE_URL}users/${user.id}/verify/${token.token}`;
-				await sendEmail(user.email, "Verify Email", url);
+				await sendEmail(utilisateur.email, "Verify Email", url);
 			}
 
 			return res

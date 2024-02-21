@@ -51,7 +51,7 @@ const login = async (req, res, next) => {
       return res.status(401).json({ message: 'Mot de passe invalide' });
     }
     const token = jwt.sign({ userId: utilisateur._id }, secretKey, { expiresIn: 86400 });
-    res.status(200).json({ status: "200",message: 'Vous êtes connecté', token: token });    
+    res.status(200).json({ status: "200", message: 'Vous êtes connecté', profilId: utilisateur.type, token: token });    
     //res.json({ token });
   } catch (error) {
     res.status(500).json({ message: 'Erreur de connexion' });
@@ -59,30 +59,28 @@ const login = async (req, res, next) => {
   
 };
 
-const verification = async(req, res, next) => {
+const verificationToken = async(req, res, next) => {
   const token = req.query.token;
 
   if (!token) {
-    return res.status(401).json({message: 'Aucun token' });
+    return res.json({status: '401',message: 'Aucun token' });
   }
  
-
   jwt.verify(token, secretKey , (err, decoded) => {
     if(err){
       if (err.name === 'TokenExpiredError') {
-        return res.status(401).json({message: 'Token expirée '+token });
+        return res.json({status: '401',message: 'Token expirée '+token });
       } 
       else {
-        return res.status(401).json({ message: 'Token non valide' });
+        return res.json({status: '401', message: 'Token non valide' });
       }
     }
     else{
-      //req.userId = decoded.userId;
-      res.status(200).json({ tokenFromDb });
+      res.json({status: '200', message: 'ok' });
       next();
     }
   });
 }
 
 
-module.exports = { getUtilisateur, inscription,login };
+module.exports = { getUtilisateur, inscription, login, verificationToken };

@@ -150,4 +150,4 @@ const urlVerify = async(req,res,next)=>{
 }
 
 
-module.exports = { getUtilisateur, inscription, login, verificationToken, verification ,urlVerify };
+module.exports = { getUtilisateur, inscription, login, verificationToken ,urlVerify };

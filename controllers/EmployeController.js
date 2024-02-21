@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const secretKey = require("../db/TokenKey");
+const {secretKey} = require("../db/TokenKey");
 const { getAllMyRdv, todayRdv, setRdvFinish } = require('../services/EmployeService');
 
 const getRdv = async (req, res, next) => {

@@ -85,7 +85,6 @@ const login = async (req, res, next) => {
 				}).save();
 
         const url = `${base_url}/${utilisateur._id}/verify/${token.token}`;
-				//const url = `${process.env.BASE_URL}users/${user.id}/verify/${token.token}`;
 				await sendEmail(utilisateur.email, "Verify Email", url);
 			}
 
@@ -140,7 +139,6 @@ const urlVerify = async(req,res,next)=>{
 		if (!token) return res.status(400).send({ message: "Lien invalide" });
 
 		await UtilisateurModel.updateOne({ _id: user._id }, { verified: true });
-		//await token.delete();
     const deletedToken = await Token.findByIdAndDelete(token._id);
 
 		return res.status(200).send({ message: "Email vérifié avec succès" });

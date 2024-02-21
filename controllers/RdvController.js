@@ -1,6 +1,6 @@
 const RdvModel = require("../models/RdvModel");
 const jwt = require('jsonwebtoken');
-const secretKey = require("../db/TokenKey");
+const {secretKey} = require("../db/TokenKey");
 const { tryRdv, payment, historiqueRdv } = require('../services/RdvService');
 
 
@@ -21,6 +21,7 @@ const paymentRdv = async (req, res, next) => {
 
 const historique = async (req, res, next) => {
     const token = req.query.token;
+    
     const userId = jwt.verify(token, secretKey);
   
     const rdv = await historiqueRdv(userId);

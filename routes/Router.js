@@ -8,10 +8,12 @@ const prefServiceController = require('../controllers/PrefServiceController');
 const sendMail=require('../controllers/MailController');
 
 const rdvCotronller =  require('../controllers/RdvController');
+const employeController =  require('../controllers/EmployeController');
 
 router.get('/utilisateur',utilisateurController.getUtilisateur);
 router.post('/user/inscription',utilisateurController.inscription);
 router.post('/user/login',utilisateurController.login);
+router.get('/token', utilisateurController.verificationToken);
 
 router.get('/service', serviceController.getServices);
 router.get('/service/search', serviceController.searchServices);
@@ -29,5 +31,10 @@ router.post('/sendmail',sendMail.sendConfirmationEmail);
 
 router.get('/:id/verify/:token',utilisateurController.urlVerify);
 
+router.get('/employe/rdv', employeController.getRdv);
+router.get('/employe/tasks', employeController.getTaches);
+router.get('/employe/tasks/done', employeController.getTachesFinis);
+router.get('/employe/tasks/setdone', employeController.setStatusTachesFini);
+router.get('/employe/tasks/rollbackdone', employeController.rollBackStatusTachesFini);
 
 module.exports = router;

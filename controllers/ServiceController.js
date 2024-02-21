@@ -61,6 +61,7 @@ const getEmployePrefereeUser = async (req, res, next) => {
     const _id = req.query._id;
     const service = await ServiceModel.findOne({_id: _id});
 
+    
     const userId = jwt.verify(token, secretKey);
 
     const prefereeEmploye = await getPreferenceEmployeParService(userId, service);

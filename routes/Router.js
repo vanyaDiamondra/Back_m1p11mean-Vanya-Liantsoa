@@ -36,5 +36,7 @@ router.get('/employe/tasks', employeController.getTaches);
 router.get('/employe/tasks/done', employeController.getTachesFinis);
 router.get('/employe/tasks/setdone', employeController.setStatusTachesFini);
 router.get('/employe/tasks/rollbackdone', employeController.rollBackStatusTachesFini);
+router.get('/notifications/stream',offreSpecialController.sse);
+
 
 module.exports = router;

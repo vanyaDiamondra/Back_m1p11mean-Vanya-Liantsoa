@@ -29,5 +29,7 @@ router.post('/sendmail',sendMail.sendConfirmationEmail);
 
 router.get('/:id/verify/:token',utilisateurController.urlVerify);
 
+router.get('/notifications/stream',offreSpecialController.sse);
+
 
 module.exports = router;

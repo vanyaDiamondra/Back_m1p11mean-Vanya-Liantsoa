@@ -4,7 +4,7 @@ const routes = require('./routes/Router');
 const cors = require('cors');
 const connectDB = require('./db/Connection');
 const { checkRappelEmail } = require('./services/RdvService');
-connectDB()
+connectDB();
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(cors({
     origin: '*', 
     optionsSuccessStatus: 200,
-  }));
+  },{ origin: 'http://localhost:4200' }));
   
 
 (async () => {

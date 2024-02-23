@@ -1,4 +1,6 @@
 const PrefEmploye = require("../models/PrefEmployeModel");
+const ServiceModel = require("../models/ServiceModel");
+const PrefServiceModel = require("../models/PrefServiceModel");
 
 const getPreferenceEmployeParService =  async (userId, service)  => {
     const employeList = service.employe;
@@ -7,8 +9,9 @@ const getPreferenceEmployeParService =  async (userId, service)  => {
     let result = [];
 
     for (let employe of employeList) {
-        const employePreferences = prefEmployeService.find(pref => pref.employe._id === employe._id);
-        const score = employePreferences ? employePreferences.note : 0;
+        const employePreferences =await PrefEmploye.find({ 'employe._id': employe._id,'client._id': userId.userId }).sort({ date: -1 }).limit(1).exec();
+        const score = employePreferences && employePreferences.length > 0 ? employePreferences[0].note : 0;
+        console.log(employePreferences);
 
         const employeObject = employe.toObject();
         employeObject.note = score;
@@ -19,5 +22,25 @@ const getPreferenceEmployeParService =  async (userId, service)  => {
 
     return response;
 }
+const getPrefServices= async(userId)=>{
+    const services = await ServiceModel.find();
+    let result = [];
+    for (let service of services) {
+        const prefService = await PrefServiceModel.find({ 'service._id': service._id,'client._id': userId.userId }).sort({ date: -1 }).limit(1).exec();
+        const score = prefService && prefService.length > 0 ? prefService[0].note : 0;
+ 
 
-module.exports = {getPreferenceEmployeParService}
+        const serviceObject = service.toObject();
+        serviceObject.note = score;
+        result.push(serviceObject);
+    }
+
+    var response = service.toObject();
+    response.employePreferee = result;
+
+    return response;
+        
+    
+}
+
+module.exports = {getPreferenceEmployeParService,getPrefServices}

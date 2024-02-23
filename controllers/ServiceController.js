@@ -2,7 +2,7 @@ const ServiceModel = require("../models/ServiceModel");
 const ServiceCategorieModel = require("../models/ServiceCategorieModel");
 const jwt = require('jsonwebtoken');
 const {secretKey} = require("../db/TokenKey");
-const { getPreferenceEmployeParService } = require('../services/ServiceSalonService');
+const { getPreferenceEmployeParService ,getPrefService} = require('../services/ServiceSalonService');
 
 const getCategorieServices = async (req, res, next) => {
     try {
@@ -68,10 +68,10 @@ const getEmployePrefereeUser = async (req, res, next) => {
 }
 
 const getPrefServices = async (req, res, next) => {
-    const token = req.query.token;
+    const token = req.query?.token;
     const userId = jwt.verify(token, secretKey);
 
-    const prefServices = await getPrefServices(userId);
+    const prefServices = await getPrefService(userId);
     res.json(prefServices);
 }
 

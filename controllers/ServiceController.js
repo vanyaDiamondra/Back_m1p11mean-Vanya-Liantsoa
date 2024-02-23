@@ -69,8 +69,6 @@ const getEmployePrefereeUser = async (req, res, next) => {
 
 const getPrefServices = async (req, res, next) => {
     const token = req.query.token;
-    console.log(token);
-
     const userId = jwt.verify(token, secretKey);
 
     const prefServices = await getPrefServices(userId);

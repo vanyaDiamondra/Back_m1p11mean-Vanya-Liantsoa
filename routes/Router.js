@@ -5,6 +5,7 @@ const utilisateurController = require('../controllers/UtilisateurController');
 const serviceController =  require('../controllers/ServiceController');
 const offreSpecialController =  require('../controllers/OffreSpecialController');
 const prefServiceController = require('../controllers/PrefServiceController');
+const prefEmpController = require('../controllers/PrefEmpController');
 const sendMail=require('../controllers/MailController');
 
 const rdvCotronller =  require('../controllers/RdvController');
@@ -17,6 +18,10 @@ router.get('/service', serviceController.getServices);
 router.get('/service/search', serviceController.searchServices);
 router.get('/service/categories', serviceController.getCategorieServices);
 router.get('/service/client', serviceController.getEmployePrefereeUser);
+router.post('/service/ajoutprefservice/:id',prefServiceController.ajoutPref);
+router.post('/service/ajoutprefemp/:id',prefEmpController.ajoutPref);
+router.get('/service/getprefnote/:id',prefServiceController.getPrefNote);
+router.get('/service/prefService',serviceController.getPrefServices);
 
 router.get('/offrespeciale', offreSpecialController.getOffres);
 
@@ -24,7 +29,7 @@ router.post('/rdv/check', rdvCotronller.checkPossibilityRdv);
 router.post('/rdv', rdvCotronller.paymentRdv);
 router.get('/rdv', rdvCotronller.historique);
 
-router.post('/service/ajoutpref/:id',prefServiceController.ajoutPref);
+
 router.post('/sendmail',sendMail.sendConfirmationEmail);
 
 router.get('/:id/verify/:token',utilisateurController.urlVerify);

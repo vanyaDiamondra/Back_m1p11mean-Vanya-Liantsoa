@@ -67,4 +67,14 @@ const getEmployePrefereeUser = async (req, res, next) => {
     res.json(prefereeEmploye);
 }
 
-module.exports = { getServices, getCategorieServices, searchServices, getEmployePrefereeUser };
+const getPrefServices = async (req, res, next) => {
+    const token = req.query.token;
+    console.log(token);
+
+    const userId = jwt.verify(token, secretKey);
+
+    const prefServices = await getPrefServices(userId);
+    res.json(prefServices);
+}
+
+module.exports = { getServices, getCategorieServices, searchServices, getEmployePrefereeUser,getPrefServices };

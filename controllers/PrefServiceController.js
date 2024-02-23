@@ -13,54 +13,64 @@ const ajoutPref = async(req, res, next) => {
         if(!user){
             return res.status(404).json({ message: 'token invalide' });
         }
+        if (!user._id || !user.nom || !user.prenom) {
+            // Gérez le cas où certaines propriétés sont manquantes
+            res.status(400).json({ message: user});
+        } 
 
         // Créez l'objet clientData
         const clientData = {
             "_id": user._id,
             "nom": user.nom,
             "prenom": user.prenom
+        };    
+
+        //prendre les informations sur le service
+        const serviceId = req.params.id;
+        const service =await ServiceModel.findById(serviceId);
+        if (!service ) {
+            return res.status(404).json({ message: 'service non existante' });
+        }
+        
+        // Créez l'objet serviceData
+        const serviceData={
+            "_id":service._id,
+            "nom":service.nom,
+            "nom_categorie":service.nom_categorie
         };
-
-        return res.json(await PrefServiceModel.find());    
-
-        // prendre les informations sur le service
-        // const serviceId = req.params.id;
-        // const service =await ServiceModel.findById(serviceId);
-        // if (!service ) {
-        //     return res.status(404).json({ message: 'service non existante' });
-        // }
-        
-        // // Créez l'objet serviceData
-        // const serviceData={
-        //     "_id":service._id,
-        //     "nom":service.nom,
-        //     "nom_categorie":service.nom_categorie
-        // };
         
 
 
-        //  const moscowTime = moment().tz('Europe/Moscow').startOf('day').format('YYYY-MM-DD');
+         const moscowTime = moment().tz('Europe/Moscow').startOf('day').format('YYYY-MM-DD');
      
 
-        //  const newPrefService = new PrefServiceModel({
-        //     service: serviceData,
-        //     client: clientData,
-        //     note: note,
-        //     date: moscowTime
-        //  });
+         const newPrefService = new PrefServiceModel({
+            service: serviceData,
+            client: clientData,
+            note: note,
+            date: moscowTime
+         });
          
-        // await newPrefService.save();
+        await newPrefService.save();
        
-        // return res.status(201).json({ message: 'PrefService created successfully!' });
+        return res.status(201).json({ message: 'PrefService created successfully!' });
 
        
     } catch (error) {
-        //
-       // console.error('Error finding user:', error);
-        res.status(500).json({ message: error });
+        return res.status(500).json({ message: error });
     }
     
 
 }
+const getPrefNote = async(req, res, next) => {
+    try {
+        const id = req.params.id;
+        const lastPref =await PrefServiceModel.find({ 'service._id': id }).sort({ date: -1 }).limit(1).exec();
+        return res.json(lastPref[0].note);
+    }
+    catch (error) {
+        return res.json(0);
+    }
+}
 
-module.exports = { ajoutPref};
+module.exports = { ajoutPref,getPrefNote};

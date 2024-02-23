@@ -22,25 +22,23 @@ const getPreferenceEmployeParService =  async (userId, service)  => {
 
     return response;
 }
-const getPrefServices= async(userId)=>{
+const getPrefService= async(userId)=>{
     const services = await ServiceModel.find();
     let result = [];
+    //console.log(services);
     for (let service of services) {
         const prefService = await PrefServiceModel.find({ 'service._id': service._id,'client._id': userId.userId }).sort({ date: -1 }).limit(1).exec();
         const score = prefService && prefService.length > 0 ? prefService[0].note : 0;
- 
 
         const serviceObject = service.toObject();
         serviceObject.note = score;
         result.push(serviceObject);
     }
+    result.sort((a, b) => b.note - a.note);
 
-    var response = service.toObject();
-    response.employePreferee = result;
-
-    return response;
+    return result;
         
     
 }
 
-module.exports = {getPreferenceEmployeParService,getPrefServices}
+module.exports = {getPreferenceEmployeParService,getPrefService}

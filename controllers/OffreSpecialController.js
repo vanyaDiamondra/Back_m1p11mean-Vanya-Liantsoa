@@ -51,5 +51,16 @@ const sse = async (req, res, next) => {
   
 };
 
+const getOffreSpec = async (req, res, next) => {
+  try{
+    const id=req.params.id;
+    const details=await OffreSpecialModel.findById(id);
+    return res.json(details);
+  }catch (error) {
+    console.error('Error setting up notification stream:', error);
+  }
+ 
+}
 
-module.exports = { getOffres ,sse };
+
+module.exports = { getOffres ,sse,getOffreSpec };

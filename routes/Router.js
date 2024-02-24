@@ -24,6 +24,8 @@ router.get('/service/getprefnote/:id',prefServiceController.getPrefNote);
 router.get('/service/prefService',serviceController.getPrefServices);
 
 router.get('/offrespeciale', offreSpecialController.getOffres);
+router.get('/offrespeciale/getOffreSpec/:id', offreSpecialController.getOffres);
+
 
 router.post('/rdv/check', rdvCotronller.checkPossibilityRdv);
 router.post('/rdv', rdvCotronller.paymentRdv);
@@ -35,6 +37,14 @@ router.post('/sendmail',sendMail.sendConfirmationEmail);
 router.get('/:id/verify/:token',utilisateurController.urlVerify);
 
 router.get('/notifications/stream',offreSpecialController.sse);
+router.get('/user/info',utilisateurController.getUserInfo);
+router.post('/user/updateprofil',utilisateurController.updateProfil);
+router.post('/user/updatepic',utilisateurController.updatePic);
 
 
 module.exports = router;
+
+
+
+
+

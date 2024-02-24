@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require("crypto");
 const {secretKey,base_url} = require("../db/TokenKey");
 const sendEmail = require("../services/EmailService");
+const HoraireEmp = require("../models/HoraireEmpModel");
 
 const getUtilisateur = async (req, res, next) => {
   try {
@@ -150,6 +151,70 @@ const urlVerify = async(req,res,next)=>{
 		return res.status(500).send({ message: error.message });
 	}
 }
+const upload= async (req, res) => {
+  try {
+    const { fileName, url } = req.body;
+    const picture = new Picture({ fileName, url });
+    await picture.save();
+    res.status(201).json({ message: 'Picture saved successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+const getUserInfo= async (req,res)=>{
+  try {
+    const token = req.query?.token;
+    const userId = jwt.verify(token, secretKey);
+    const userInfo = await UtilisateurModel.findById(userId.userId);
+    console.log(userInfo);
+    const horaire = await HoraireEmp.find({'employe.id':userId.userId}).sort({ date: -1 }).limit(1).exec();;
+    const serviceObject = userInfo.toObject();
+    serviceObject.debut = horaire[0].debut;
+    serviceObject.fin = horaire[0].fin;
+    return res.json(serviceObject);
+
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+const updateProfil= async (req,res)=>{
+  try {
+    const {nom,prenom,contact,date_naissance,token} = req.body;
+    //Vérification champ vide
+    if (!nom || !prenom|| !contact ) {
+      return res.status(400).json({ message: 'Le remplissage de tous les champs est requis' });
+    }
+
+    // Vérification date
+    const today = new Date();
+    const dateNaissance = new Date(date_naissance);
+    if (dateNaissance >= today) {
+      return res.status(400).json({ message: 'Date de naissance invalide' });
+    }
+
+    const updatedDocument = await UtilisateurModel.findByIdAndUpdate(userId.userId, { nom: nom,prenom:prenom,contact:contact, date_naissance:date_naissance }, { new: true });
+
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+const updatePic= async (req,res)=>{
+  try {
+    const {token,url} = req.body;
+    const userId = jwt.verify(token, secretKey);
+    const updatedDocument = await UtilisateurModel.findByIdAndUpdate(userId.userId, { photo: url }, { new: true });
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
 
 
-module.exports = { getUtilisateur, inscription,login,verification ,urlVerify};
+module.exports = { getUtilisateur, inscription,login,verification ,urlVerify,getUserInfo,updateProfil,updatePic};

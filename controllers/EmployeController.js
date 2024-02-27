@@ -1,11 +1,9 @@
 const jwt = require('jsonwebtoken');
-const {secretKey} = require("../db/TokenKey");
 const { getAllMyRdv, todayRdv, setRdvFinish } = require('../services/EmployeService');
 const UtilisateurModel = require("../models/UtilisateurModel");
 const Token = require("../models/Token");
 const {secretKey,base_url} = require("../db/TokenKey");
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 
 const getRdv = async (req, res, next) => {
     const token = req.query.token;

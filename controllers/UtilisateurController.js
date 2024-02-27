@@ -235,4 +235,4 @@ const updatePic= async (req,res)=>{
 }
 
 
-module.exports = { getUtilisateur, inscription,login,verification ,urlVerify,getUserInfo,updateProfil,updatePic};
+module.exports = { getUtilisateur, inscription,login, verificationToken ,urlVerify,getUserInfo,updateProfil,updatePic};

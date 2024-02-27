@@ -7,6 +7,7 @@ const crypto = require("crypto");
 const {secretKey,base_url} = require("../db/TokenKey");
 const sendEmail = require("../services/EmailService");
 const HoraireEmp = require("../models/HoraireEmpModel");
+const moment = require('moment-timezone');
 
 const getUtilisateur = async (req, res, next) => {
   try {
@@ -179,7 +180,9 @@ const getUserInfo= async (req,res)=>{
 }
 const updateProfil= async (req,res)=>{
   try {
-    const {nom,prenom,contact,date_naissance,token} = req.body;
+    const {nom,prenom,contact,date_naissance,token,debut,fin} = req.body;
+
+    const userId = jwt.verify(token, secretKey);
     //Vérification champ vide
     if (!nom || !prenom|| !contact ) {
       return res.status(400).json({ message: 'Le remplissage de tous les champs est requis' });
@@ -194,6 +197,23 @@ const updateProfil= async (req,res)=>{
 
     const updatedDocument = await UtilisateurModel.findByIdAndUpdate(userId.userId, { nom: nom,prenom:prenom,contact:contact, date_naissance:date_naissance }, { new: true });
 
+    console.log(updatedDocument);
+    const moscowTime = moment().tz('Europe/Moscow').startOf('day').toDate();
+    const user={
+      'id':updatedDocument._id,
+      'nom':nom,
+      'prenom':prenom
+    };
+    const horaire=new HoraireEmp({
+      employe:user,
+      'debut':debut,
+      'fin':fin,
+      'date':moscowTime
+    });
+    console.log(horaire);
+    await horaire.save();
+    return res.json({message : 'utilisateur bien mis à jour'});
+
   }
   catch (err) {
     console.error(err);
@@ -205,6 +225,8 @@ const updatePic= async (req,res)=>{
     const {token,url} = req.body;
     const userId = jwt.verify(token, secretKey);
     const updatedDocument = await UtilisateurModel.findByIdAndUpdate(userId.userId, { photo: url }, { new: true });
+    console.log(updatedDocument);
+    return res.json({message:'image mis à jour'})
   }
   catch (err) {
     console.error(err);

@@ -1,6 +1,11 @@
 const jwt = require('jsonwebtoken');
 const {secretKey} = require("../db/TokenKey");
 const { getAllMyRdv, todayRdv, setRdvFinish } = require('../services/EmployeService');
+const UtilisateurModel = require("../models/UtilisateurModel");
+const Token = require("../models/Token");
+const {secretKey,base_url} = require("../db/TokenKey");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const getRdv = async (req, res, next) => {
     const token = req.query.token;
@@ -44,14 +49,9 @@ const rollBackStatusTachesFini = async (req, res, next) => {
 };
 
 
-module.exports = { getRdv, getTaches, getTachesFinis, setStatusTachesFini, rollBackStatusTachesFini };
 
 
-const UtilisateurModel = require("../models/UtilisateurModel");
-const Token = require("../models/Token");
-const {secretKey,base_url} = require("../db/TokenKey");
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+
 
 
 const creer = async (req, res, next) => {
@@ -150,4 +150,6 @@ const creer = async (req, res, next) => {
       console.error('Error setting up notification stream:', error);
     }
   }
-  module.exports = {creer,supprimer,modifier,rechercher,getall}
+
+
+  module.exports = { getRdv, getTaches, getTachesFinis, setStatusTachesFini, rollBackStatusTachesFini,creer,supprimer,modifier,rechercher,getall };

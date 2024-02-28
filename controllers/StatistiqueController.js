@@ -1,4 +1,4 @@
-const { tempsMoyenParEmploye, nbReservation, chiffreAffaires } = require('../services/StatistiqueService');
+const { tempsMoyenParEmploye, nbReservation, chiffreAffaires, beneficeTotal } = require('../services/StatistiqueService');
 
 const getTempsMoyenEmploye = async (req, res, next) => {
   try {
@@ -32,5 +32,16 @@ const getChiffreDAffaires = async (req, res, next) => {
   }
 };
 
+const getBenefice = async (req, res, next) => {
+  try {
+    const annee = parseInt(req.query.annee, 10);
+    const result = await beneficeTotal(annee);
+    res.json(result);
+  } 
+  catch (err) {
+    throw err.message;
+  }
+};
 
-module.exports = { getTempsMoyenEmploye, getNbReservation, getChiffreDAffaires };
+
+module.exports = { getTempsMoyenEmploye, getNbReservation, getChiffreDAffaires, getBenefice };

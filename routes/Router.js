@@ -46,6 +46,7 @@ router.get('/notifications/stream',offreSpecialController.sse);
 
 router.get('/stat/avgemp', statistiqueController.getTempsMoyenEmploye);
 router.get('/stat/reservation', statistiqueController.getNbReservation); 
-router.get('/stat/ca', statistiqueController.getChiffreDAffaires);
+router.get('/stat/ca', statistiqueController.getChiffreDAffaires); 
+router.get('/stat/benefice', statistiqueController.getBenefice);
 
 module.exports = router;

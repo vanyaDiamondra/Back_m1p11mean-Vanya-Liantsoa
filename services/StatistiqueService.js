@@ -62,7 +62,7 @@ const nbReservation = async (mois) => {
   const daysOfMonth = Array.from({ length: 31 }, (_, i) => i + 1);
 
   try {
-    if( mois == undefined ){
+    if( mois == undefined || isNaN(mois) ){
       mois = 1;
     }
 
@@ -70,8 +70,8 @@ const nbReservation = async (mois) => {
       {
         $group: {
           _id: {
-            day: { $dayOfMonth: "$date" },
-            month: { $month: "$date" }, 
+            day: { $dayOfMonth: "$datereservation" },
+            month: { $month: "$datereservation" }, 
           },
           count: { $sum: 1 }
         }
@@ -102,7 +102,7 @@ const chiffreAffaires = async (mois) => {
   const daysOfMonth = Array.from({ length: 31 }, (_, i) => i + 1);
   
   try {
-    if( mois == undefined ){
+    if( mois == undefined || isNaN(mois) ){
       mois = 1;
     }
 
@@ -137,36 +137,75 @@ const chiffreAffaires = async (mois) => {
   }
 };
 
-// total bénéfice par mois
-const beneficeTotal = async (mois) => {
+// total bénéfice par mois par an
+const beneficeTotal = async (annee) => {
+  const monthsOfYear = Array.from({ length: 12 }, (_, i) => i + 1);
+
   try {
-    if( mois == undefined ){
-      mois = 1;
+    if( annee === undefined || isNaN(annee) ){
+      annee = 2024;
     }
 
     const result = await RdvModel.aggregate([
       {
         $group: {
           _id: {
-            month: { $month: "$date" }, 
+            year: { $year: "$date" },
+            month: { $month: "$date" },
           },
-          total: {
-            $sum: "$service.prix"
-          }
+          chiffreAffaires: { $sum: "$service.prix" }
         }
       },
       {
         $match: {
-          "_id.month": 1,
+          "_id.year": annee,
         },
       },
+      {
+        $lookup: {
+          from: "depense",
+          let: { month: "$_id.month", year: "$_id.year" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$mois", "$$month"] },
+                    { $eq: ["$annee", "$$year"] }
+                  ]
+                }
+              }
+            }
+          ],
+          as: "depenses"
+        }
+      },
+      {
+        $unwind: {
+          path: "$depenses",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $group: {
+          _id: "$_id",
+          chiffreAffaires: { $first: "$chiffreAffaires" },
+          depenses: { $sum: "$depenses.prix" }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          year: "$_id.year",
+          month: "$_id.month",
+          benefices: { $subtract: ["$chiffreAffaires", "$depenses"] }
+        }
+      }
     ]);
 
-    console.log(JSON.stringify(result));
-
-    const mergedResult = daysOfMonth.map(day => ({
-      day,
-      count: (result.find(r => r._id.day === day) || { count: 0 }).count, 
+    const mergedResult = monthsOfYear.map(month => ({
+      month,
+      benefice: (result.find(r => r.month === month) || { benefices: 0 }).benefices, 
     }));
     
     return mergedResult;
@@ -178,4 +217,4 @@ const beneficeTotal = async (mois) => {
 };
 
 
-module.exports = { tempsMoyenParEmploye, nbReservation, chiffreAffaires };
+module.exports = { tempsMoyenParEmploye, nbReservation, chiffreAffaires, beneficeTotal };

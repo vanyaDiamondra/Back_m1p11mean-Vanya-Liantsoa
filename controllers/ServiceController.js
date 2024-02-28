@@ -105,7 +105,7 @@ const creer = async (req, res, next) => {
           }
         });
       });
-      const service = new UtilisateurModel({ nom,description,prix,image,id_categorie,nom_categorie,duree,commission,employe:foundEmployees});
+      const service = new ServiceModel({ nom,description,prix,image,id_categorie,nom_categorie,duree,commission,employe:foundEmployees});
       await service.save();
       return res.status(201).json({ message: 'Service bien enregistrer' });
       
@@ -133,6 +133,39 @@ const creer = async (req, res, next) => {
   }
 
   const modifier = async (req, res, next) => {
+   
+    try{
+      const id = req.params.id;
+      const {nom,description,prix,image,id_categorie,nom_categorie,duree, commission,emp} = req.body; 
+      if (!nom || !description|| !prix || !id_categorie || !nom_categorie || !duree || !commission) {
+          return res.status(400).json({ message: 'Le remplissage de tous les champs est requis' });
+      }
+      let foundEmployees = [];
+      emp.forEach(employeeId => {
+          UtilisateurModel.findById(employeeId, (err, employee) => {
+            if (err) {
+              console.error('Error finding employee:', err);
+            } else {
+              if (employee) {
+                  const employeData={
+                      "_id":employee._id,
+                      "nom":employee.nom,
+                      "prenom":employee.prenom,
+                      "photo":employee.photo
+                  };
+                foundEmployees.push(employeData);
+              } else {
+                console.log('Employee not found with ID:', employeeId);
+              }
+            }
+          });
+        });
+        const service = new ServiceModel.findByIdAndUpdate(id,{ nom,description,prix,image,id_categorie,nom_categorie,duree,commission,employe:foundEmployees}, { new: true });
+        return res.status(201).json({ message: 'Element bien modifier' });
+  }
+  catch (error) {
+      res.status(500).json({ message: error.message });
+    }
 
   }
   const getall = async (req, res, next) =>{

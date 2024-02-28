@@ -10,7 +10,7 @@ const getPreferenceEmployeParService =  async (userId, service)  => {
     let result = [];
 
     for (let employe of employeList) {
-        const employePreferences =await PrefEmploye.find({ 'employe._id': employe._id,'client._id': userId.userId }).sort({ date: -1 }).limit(1).exec();
+        const employePreferences = await PrefEmploye.find({ 'employe._id': employe._id,'client._id': userId.userId }).sort({ date: -1 }).limit(1).exec();
         const score = employePreferences && employePreferences.length > 0 ? employePreferences[0].note : 0;
         console.log(employePreferences);
 

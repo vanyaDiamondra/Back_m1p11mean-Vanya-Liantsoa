@@ -6,10 +6,11 @@ const serviceController =  require('../controllers/ServiceController');
 const offreSpecialController =  require('../controllers/OffreSpecialController');
 const prefServiceController = require('../controllers/PrefServiceController');
 const prefEmpController = require('../controllers/PrefEmpController');
-const sendMail=require('../controllers/MailController');
+const sendMail = require('../controllers/MailController');
 
 const rdvCotronller =  require('../controllers/RdvController');
 const employeController =  require('../controllers/EmployeController');
+const statistiqueController =  require('../controllers/StatistiqueController');
 
 router.get('/utilisateur',utilisateurController.getUtilisateur);
 router.post('/user/inscription',utilisateurController.inscription);
@@ -54,4 +55,8 @@ module.exports = router;
 
 
 
+router.get('/stat/avgemp', statistiqueController.getTempsMoyenEmploye);
+router.get('/stat/reservation', statistiqueController.getNbReservation); 
+router.get('/stat/ca', statistiqueController.getChiffreDAffaires); 
+router.get('/stat/benefice', statistiqueController.getBenefice);
 

@@ -8,7 +8,7 @@ const getAllMyRdv = async (userId, monthValue)  => {
     if( monthValue !== undefined ){
         rdvList = await Rdv.find({
             'employe._id': userId.userId,
-            $expr: { $eq: [{ $month: '$date' }, monthValue] }       // extract month = monthValue
+            $expr: { $eq: [{ $month: '$date' }, monthValue] }      // extract month = monthValue
         }).sort({ date: -1 });
     } 
     else{

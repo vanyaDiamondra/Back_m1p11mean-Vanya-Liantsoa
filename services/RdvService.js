@@ -71,6 +71,7 @@ const constructRdv = (client, service, employe, date, debut, fin) => {
             prenom: employe.prenom
         },
         date: date,
+        datereservation: new Date(),
         heure_debut: debut, 
         heure_fin: fin
     }

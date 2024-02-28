@@ -1,23 +1,27 @@
 const mongoose = require('mongoose')
 
-const rdvSchema = new mongoose.Schema({
-  _id: {
-    type: String,
-    required: true,
-  }
-});
-
 const DepenseSchema = new mongoose.Schema({
-    rdv: rdvSchema,
-    prix: {
-      type: Number,
-      required: true,
+  nom: { type: String, required: true },
+  categorie: {
+    _id: { 
+      type: String,
+      required: true 
     },
-    date: {
-      type: Date,
-      required: true,
-    }
+    nom: { 
+      type: String, 
+      required: true }
+  },
+  prix: { 
+    type: Number, 
+    required: true 
+  },
+  mois: { 
+    type: String, 
+    required: true },
+  annee: { 
+    type: String, 
+    required: true }
 },{collection:'depense'})
 
-const DepenseModel = mongoose.model('depense', DepenseSchema);
-module.exports = DepenseModel;
+const Depense= mongoose.model('depense', DepenseSchema);
+module.exports = Depense;

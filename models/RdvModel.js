@@ -50,6 +50,10 @@ const RdvSchema = new mongoose.Schema({
       type: Date,
       required: true,
     },
+    datereservation : {
+      type: Date,
+      required: true,
+    },
     heure_debut: {
       type: Date,
       required: true,

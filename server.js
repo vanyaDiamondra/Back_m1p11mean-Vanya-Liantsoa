@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(cors({
     origin: '*', 
     optionsSuccessStatus: 200,
-  },{ origin: 'https://front-m1p11mean-vanya-liantsoa.onrender.com/' }));
+  },{ origin: 'http://localhost:4200' }));
   
 
 (async () => {

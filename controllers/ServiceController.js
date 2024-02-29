@@ -176,5 +176,14 @@ const creer = async (req, res, next) => {
       console.error('Error setting up notification stream:', error);
     }
   }
+  const findByid = async (req, res, next) =>{
+    try{
+      const id = req.params.id;
+      const details=await ServiceModel.findById(id);
+      return res.json(details);
+    }catch (error) {
+      console.error('Error setting up notification stream:', error);
+    }
+  }
 
-module.exports = { getServices, getCategorieServices, searchServices, getEmployePrefereeUser,getPrefServices,creer,supprimer,modifier,getall };
+module.exports = { getServices, getCategorieServices, searchServices, getEmployePrefereeUser,getPrefServices,creer,supprimer,modifier,getall ,findByid};

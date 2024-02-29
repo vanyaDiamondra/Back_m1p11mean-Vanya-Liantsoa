@@ -62,6 +62,7 @@ router.get('/service/list',serviceController.getall);
 router.post('/service/create',serviceController.creer);
 router.post('/service/update/:id',serviceController.modifier);
 router.get('/service/delete/:id',serviceController.supprimer);
+router.get('/service/findbyid/:id',serviceController.findByid);
 
 router.get('/offre/list',offreSpecialController.getall);
 router.post('/offre/create',offreSpecialController.creer);

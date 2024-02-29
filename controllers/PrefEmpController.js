@@ -37,7 +37,7 @@ const ajoutPref = async(req, res, next) => {
         }
 
         const documents = await PrefEmploye.find({
-            'client._id': clientId,
+            'client._id': user._id,
             'employe._id': employeId
         });
         if (documents.length === 0) {

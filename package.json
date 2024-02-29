@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "devStart": "nodemon server.js",
-    "preinstall": "npm install -g node-gyp && npm install bcrypt@5.1.1"
+    "preinstall": "npm install"
   },
   "engines": {
     "node": "20.11.1"

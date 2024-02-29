@@ -45,19 +45,20 @@ const inscription = async (req, res, next) => {
     const mdphashe = await bcrypt.hash(mdp, 10);
     const utilisateur = new UtilisateurModel({ nom,prenom,contact,email,sexe,date_naissance,mdp:mdphashe,type:1,photo:""});
     await utilisateur.save();
-    //res.status(201).json({ message: 'Utilisateur bien enregistrer' });
+    //res.status(201).json({ message: 'Utilisateur bien enregistré' });
 
 
     const token = await new Token({
 			userId: utilisateur._id,
 			token: crypto.randomBytes(32).toString("hex"),
 		}).save();
+
 		const url = `${base_url}/${utilisateur._id}/verify/${token.token}`;
-		await sendEmail(utilisateur.email, "Verify Email", url);
+		await sendEmail(utilisateur.email, "Confirmation inscription salon de beauté", url);
 
 		return res
 			.status(201)
-			.send({ message: "Un email vous a été envoyer veuillez verifier votre compte" });
+			.send({ message: "Un email vous a été envoyé, veuillez vérifier votre compte et confirmer l'inscription" });
 
 
   } catch (error) {
@@ -78,8 +79,8 @@ const login = async (req, res, next) => {
     }
     if (!utilisateur.verified) {
 			let token = await Token.findOne({ userId: utilisateur._id });
+
 			if (!token) {
-      
         await sendEmail(utilisateur.email, "Verify Email", url);
 				token = await new Token({
 					userId: utilisateur._id,

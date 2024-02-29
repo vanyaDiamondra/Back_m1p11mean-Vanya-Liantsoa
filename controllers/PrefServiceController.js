@@ -1,7 +1,8 @@
 const PrefServiceModel = require("../models/PrefServiceModel");
 const ServiceModel = require("../models/ServiceModel");
 const UtilisateurService=require("../services/UtilisateurService");
-const UtilisateurModel=require("../models/UtilisateurModel");
+const jwt = require('jsonwebtoken');
+const {secretKey} = require("../db/TokenKey");
 const moment = require('moment-timezone');
 
 const ajoutPref = async(req, res, next) => {
@@ -39,12 +40,9 @@ const ajoutPref = async(req, res, next) => {
             "nom_categorie":service.nom_categorie
         };
         
+        const moscowTime = moment().tz('Europe/Moscow').startOf('day').format('YYYY-MM-DD');
 
-
-         const moscowTime = moment().tz('Europe/Moscow').startOf('day').format('YYYY-MM-DD');
-     
-
-         const newPrefService = new PrefServiceModel({
+        const newPrefService = new PrefServiceModel({
             service: serviceData,
             client: clientData,
             note: note,
@@ -65,7 +63,10 @@ const ajoutPref = async(req, res, next) => {
 const getPrefNote = async(req, res, next) => {
     try {
         const id = req.params.id;
-        const lastPref =await PrefServiceModel.find({ 'service._id': id }).sort({ date: -1 }).limit(1).exec();
+        const token = req.query.token;
+        const userId = jwt.verify(token, secretKey);
+
+        const lastPref = await PrefServiceModel.find({ 'service._id': id, 'client._id': userId.userId }).sort({ date: -1 }).limit(1).exec();
         return res.json(lastPref[0].note);
     }
     catch (error) {

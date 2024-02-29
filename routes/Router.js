@@ -52,6 +52,24 @@ router.get('/stat/reservation', statistiqueController.getNbReservation);
 router.get('/stat/ca', statistiqueController.getChiffreDAffaires); 
 router.get('/stat/benefice', statistiqueController.getBenefice);
 
+router.get('/employe/list',employeController.getall);
+router.post('/employe/create',employeController.creer);
+router.post('/employe/update/:id',employeController.modifier);
+router.get('/employe/delete/:id',employeController.supprimer);
+router.get('/employe/search',employeController.rechercher);
+
+router.get('/service/list',serviceController.getall);
+router.post('/service/create',serviceController.creer);
+router.post('/service/update/:id',serviceController.modifier);
+router.get('/service/delete/:id',serviceController.supprimer);
+
+router.get('/offre/list',offreSpecialController.getall);
+router.post('/offre/create',offreSpecialController.creer);
+router.post('/offre/update/:id',offreSpecialController.modifier);
+router.get('/offre/delete/:id',offreSpecialController.supprimer);
+router.post('/offre/search',offreSpecialController.rechercher);
+
+
 module.exports = router;
 
 

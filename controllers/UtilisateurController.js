@@ -163,14 +163,29 @@ const upload= async (req, res) => {
 const getUserInfo= async (req,res)=>{
   try {
     const token = req.query?.token;
-    const userId = jwt.verify(token, secretKey);
-    const userInfo = await UtilisateurModel.findById(userId.userId);
-    console.log(userInfo);
-    const horaire = await HoraireEmp.find({'employe.id':userId.userId}).sort({ date: -1 }).limit(1).exec();;
-    const serviceObject = userInfo.toObject();
-    serviceObject.debut = horaire[0].debut;
-    serviceObject.fin = horaire[0].fin;
-    return res.json(serviceObject);
+    const id = req.query?.id;
+    console.log(token);
+    //console.log(id);
+    if(token != null){
+      const userId = jwt.verify(token, secretKey);
+      const userInfo = await UtilisateurModel.findById(userId.userId);
+      console.log(userInfo);
+      const horaire = await HoraireEmp.find({'employe.id':userId.userId}).sort({ date: -1 }).limit(1).exec();;
+      const serviceObject = userInfo.toObject();
+      serviceObject.debut = horaire[0].debut;
+      serviceObject.fin = horaire[0].fin;
+      return res.json(serviceObject);
+    }
+    if(id != null){
+      const userInfo = await UtilisateurModel.findById(id);
+      console.log(userInfo);
+      const horaire = await HoraireEmp.find({'employe.id':id}).sort({ date: -1 }).limit(1).exec();;
+      const serviceObject = userInfo.toObject();
+      serviceObject.debut = horaire[0].debut;
+      serviceObject.fin = horaire[0].fin;
+      return res.json(serviceObject);
+    }
+    
 
   }
   catch (err) {

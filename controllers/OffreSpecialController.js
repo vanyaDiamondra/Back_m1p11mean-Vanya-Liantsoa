@@ -79,10 +79,8 @@ const creer = async (req, res, next) => {
     "image":service.service
   };
   const offre = new OffreSpecial({ nom,description,prix,service:serviceData});
-
-
-
-
+  await offre.save();
+  return res.status(201).json({ message: 'Offre bien enregistrer' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -104,11 +102,79 @@ const supprimer = async (req, res, next) => {
 }
 
 const modifier = async (req, res, next) => {
-
+  try {
+    const id = req.params.id;
+    const {nom,description,prix,id_service} = req.body;  
+    if (!nom || !description|| !prix ) {
+      return res.status(400).json({ message: 'Le remplissage de tous les champs est requis' });
+    }
+    const service =await ServiceModel.findById(id_service);
+    if (!service ) {
+      return res.status(404).json({ message: 'service non existante' });
+    }
+    const updatedDocument = await OffreSpecial.findByIdAndUpdate(id, { nom: nom,description:description,prix:prix }, { new: true });
+    return res.status(201).json({ message: 'Element bien modifier' });
+  
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
 }
 
 const rechercher = async (req, res, next) => {
+  const {mot,min,max} = req.body; 
+  if(min ==0 && max == 0){
+    const searchQuery = {
+      $or: [
+        { name: { $regex: mot, $options: 'i' } }, 
+        { description: { $regex: mot, $options: 'i' } }
+      ]
+    };
+    OffreSpecial.find(searchQuery, (err, offres) => {
+      if (err) {
+        res.status(500).json({ message: error.message });
+      } else {
+        return res.json(offres);
+      }
+    });
 
+    
+  }
+  else if (max == 0){
+    const searchQuery = {
+      $and: [
+        { $or: [
+          { name: { $regex: 'net', $options: 'i' } },
+          { description: { $regex: 'net', $options: 'i' } } 
+        ]},
+        { price: { $gt: min } } 
+      ]
+    };
+    OffreSpecial.find(searchQuery, (err, offres) => {
+      if (err) {
+        res.status(500).json({ message: error.message });
+      } else {
+        return res.json(offres);
+      }
+    });
+  }
+  else{
+    const searchQuery = {
+      $and: [
+        { $or: [
+          { name: { $regex: 'net', $options: 'i' } },
+          { description: { $regex: 'net', $options: 'i' } } 
+        ]},
+        { price: { $gt: min , $lt: max} } 
+      ]
+    };
+    OffreSpecial.find(searchQuery, (err, offres) => {
+      if (err) {
+        res.status(500).json({ message: error.message });
+      } else {
+        return res.json(offres);
+      }
+    });
+  }
 }
 const getall = async (req, res, next) =>{
   try{

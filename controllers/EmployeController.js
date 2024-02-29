@@ -58,7 +58,7 @@ const creer = async (req, res, next) => {
       const {nom,prenom,contact,email,sexe,date_naissance,mdp} = req.body;
   
       //Vérification champ vide
-      if (!nom || !prenom|| !contact || !sexe || !mdp || !email) {
+      if (!nom || !prenom || !contact || !sexe || !mdp || !email) {
         return res.status(400).json({ message: 'Le remplissage de tous les champs est requis' });
       }
   
@@ -105,7 +105,7 @@ const creer = async (req, res, next) => {
 
   const modifier = async (req, res, next) => {
     try {
-      
+      const empid = req.params.id;
         const {nom,prenom,contact,email,sexe,date_naissance,mdp} = req.body;
     
         //Vérification champ vide
@@ -127,9 +127,8 @@ const creer = async (req, res, next) => {
     
         //enregistrement
         const mdphashe = await bcrypt.hash(mdp, 10);
-        const updatedDocument = await UtilisateurModel.findByIdAndUpdate(userId.userId, { nom: nom,prenom: prenom,contact: contact,email: email,sexe: sexe,date_naissance: date_naissance,mdp: mdphashe }, { new: true });
-        await utilisateur.save();
-        return res.status(201).json({ message: 'Utilisateur bien enregistrer' });
+        const updatedDocument = await UtilisateurModel.findByIdAndUpdate(empid, { nom: nom,prenom: prenom,contact: contact,email: email,sexe: sexe,date_naissance: date_naissance,mdp: mdphashe }, { new: true });
+        return res.status(201).json({ message: 'Element bien modifier' });
 
       } catch (error) {
         res.status(500).json({ message: error.message });
@@ -138,6 +137,27 @@ const creer = async (req, res, next) => {
   }
 
   const rechercher = async (req, res, next) => {
+    try{
+        const nom = req.query.nom;
+        const conditions = {};
+        if( nom !== undefined ){
+            conditions.$or = [
+                { nom: new RegExp(nom, 'i') },
+                { prenom: new RegExp(nom, 'i') } // Matching either nom or prenom
+            ];
+            conditions.type= 2;
+        }
+        let employes;
+        if (Object.keys(conditions).length === 0) {
+            employes = await UtilisateurModel.find({type:2});
+        }  else {
+            employes = await UtilisateurModel.find(conditions);
+        }
+        res.json(employes);
+    }
+    catch (error) {
+        console.error('Error setting up notification stream:', error);
+      }
 
   }
   const getall = async (req, res, next) =>{

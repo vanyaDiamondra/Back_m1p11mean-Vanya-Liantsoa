@@ -69,7 +69,7 @@ const RdvSchema = new mongoose.Schema({
     status: {
       type: Number,
       default: 0
-    }
+    },
 },{collection:'rdv'})
 
 const Rdv = mongoose.model('rdv', RdvSchema);

@@ -20,9 +20,6 @@ const ajoutPref = async(req, res, next) => {
                 "nom": user.nom,
                 "prenom": user.prenom
             };
-           
-
-       
 
         // // Find the employee info
         const employeId = req.params.id;
@@ -59,11 +56,8 @@ const ajoutPref = async(req, res, next) => {
             const depense = await PrefEmploye.findByIdAndUpdate(docid,{ note:note}, { new: true });
         }
 
-
-
-
-        
         return res.status(201).json({ message: 'PrefEmp created successfully!' });
+        
     } catch (error) {
         //
        // console.error('Error finding user:', error);

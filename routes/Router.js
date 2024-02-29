@@ -29,11 +29,9 @@ router.get('/service/prefService',serviceController.getPrefServices);
 router.get('/offrespeciale', offreSpecialController.getOffres);
 router.get('/offrespeciale/getOffreSpec/:id', offreSpecialController.getOffres);
 
-
 router.post('/rdv/check', rdvCotronller.checkPossibilityRdv);
 router.post('/rdv', rdvCotronller.paymentRdv);
 router.get('/rdv', rdvCotronller.historique);
-
 
 router.post('/sendmail',sendMail.sendConfirmationEmail);
 
@@ -49,14 +47,13 @@ router.get('/user/info',utilisateurController.getUserInfo);
 router.post('/user/updateprofil',utilisateurController.updateProfil);
 router.post('/user/updatepic',utilisateurController.updatePic);
 
+router.get('/stat/avgemp', statistiqueController.getTempsMoyenEmploye);
+router.get('/stat/reservation', statistiqueController.getNbReservation); 
+router.get('/stat/ca', statistiqueController.getChiffreDAffaires); 
+router.get('/stat/benefice', statistiqueController.getBenefice);
 
 module.exports = router;
 
 
 
-
-router.get('/stat/avgemp', statistiqueController.getTempsMoyenEmploye);
-router.get('/stat/reservation', statistiqueController.getNbReservation); 
-router.get('/stat/ca', statistiqueController.getChiffreDAffaires); 
-router.get('/stat/benefice', statistiqueController.getBenefice);
 

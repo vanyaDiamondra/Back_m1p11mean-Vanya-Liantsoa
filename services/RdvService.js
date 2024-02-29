@@ -82,9 +82,9 @@ const suggestEmployeRdv = async (userId, service, debut, fin, date, response) =>
     var maxPrefEmploye = await PrefEmploye.findOne({'client._id': userId.userId, 'service._id': service._id})
                                 .sort({ note: -1 })
                                 .limit(1);
-    maxPrefEmploye = await Utilisateur.findOne({_id: maxPrefEmploye.employe._id});
 
     if( maxPrefEmploye ){
+        maxPrefEmploye = await Utilisateur.findOne({_id: maxPrefEmploye.employe._id});
         const checkPref = await checkPossibilityEmploye(maxPrefEmploye, debut, fin, date);
         if( checkPref === true ){
             response.message = "Votre employé préféré vous recevra";

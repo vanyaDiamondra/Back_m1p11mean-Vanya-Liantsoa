@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  
   "scripts": {
-    "devStart": "nodemon server.js"
+    "devStart": "nodemon server.js",
+    "preinstall": "cp -r compiled_bcrypt/* node_modules/bcrypt/lib/binding/napi-v3/"
   },
   "engines": {
     "node": "20.11.1"
-  },  
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "devStart": "nodemon server.js",
-    "preinstall": "npm install"
+    "devStart": "nodemon server.js"
   },
   "engines": {
     "node": "20.11.1"

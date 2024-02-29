@@ -11,6 +11,7 @@ const sendMail = require('../controllers/MailController');
 const rdvCotronller =  require('../controllers/RdvController');
 const employeController =  require('../controllers/EmployeController');
 const statistiqueController =  require('../controllers/StatistiqueController');
+const DepenseController = require('../controllers/DepenseController');
 
 router.get('/utilisateur',utilisateurController.getUtilisateur);
 router.post('/user/inscription',utilisateurController.inscription);
@@ -69,6 +70,21 @@ router.post('/offre/create',offreSpecialController.creer);
 router.post('/offre/update/:id',offreSpecialController.modifier);
 router.get('/offre/delete/:id',offreSpecialController.supprimer);
 router.post('/offre/search',offreSpecialController.rechercher);
+
+
+router.get('/depense/list',DepenseController.getall);
+router.post('/depense/create',DepenseController.creer);
+router.post('/depense/update/:id',DepenseController.modifier);
+router.get('/depense/delete/:id',DepenseController.supprimer);
+router.get('/depense/search',DepenseController.rechercher);
+
+router.get('/depense/findbyid/:id',DepenseController.findByid);
+router.get('/depense',DepenseController.getall);
+
+
+router.get('/depense/categorie',DepenseController.depcat);
+
+
 
 
 module.exports = router;

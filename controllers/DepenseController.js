@@ -3,16 +3,24 @@ const Token = require("../models/Token");
 const {secretKey,base_url} = require("../db/TokenKey");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const DepenseCategorie = require("../models/CatDepense");
+const DepenseCategorie = require("../models/CatDepenseModel");
 
+
+const depcat = async (req, res, next) => {
+  try {
+    const result= await DepenseCategorie.find();
+    return res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 const creer = async (req, res, next) => {
   try {
-    const {nom,prix,mois,annee,id_categorie} = req.body;  
+    const {nom,prix,mois,annee,categorie} = req.body;  
     if (!nom || !mois|| !prix || !annee ) {
       return res.status(400).json({ message: 'Le remplissage de tous les champs est requis' });
     }
-    const categorie =await DepenseCategorie.findById(id_categorie);
     if (!categorie ) {
       return res.status(404).json({ message: 'categorie non existante' });
     }
@@ -44,16 +52,15 @@ const creer = async (req, res, next) => {
   const modifier = async (req, res, next) => {
     try {
       const id = req.params.id;
-      const {nom,prix,mois,annee,id_categorie} = req.body;  
+      const {nom,prix,mois,annee,categorie} = req.body;  
       if (!nom || !mois|| !prix || !annee ) {
         return res.status(400).json({ message: 'Le remplissage de tous les champs est requis' });
       }
-      const categorie =await DepenseCategorie.findById(id_categorie);
       if (!categorie ) {
         return res.status(404).json({ message: 'categorie non existante' });
       }
       
-      const depense = new DepenseModel.findByIdAndUpdate(id,{ nom,categorie:categorie,prix,mois,annee}, { new: true });
+      const depense = await DepenseModel.findByIdAndUpdate(id,{ nom,categorie:categorie,prix,mois,annee}, { new: true });
       return res.status(201).json({ message: 'element bien modifier' });
 
     
@@ -69,10 +76,20 @@ const creer = async (req, res, next) => {
 
   const getall = async (req, res, next) =>{
     try{
-      const details=await DepenseModel.find({type:2});
+      const details=await DepenseModel.find();
       return res.json(details);
     }catch (error) {
       console.error('Error setting up notification stream:', error);
     }
   }
-  module.exports = {creer,supprimer,modifier,rechercher,getall}
+
+  const findByid = async (req, res, next) =>{
+    try{
+      const id = req.params.id;
+      const details=await DepenseModel.findById(id);
+      return res.json(details);
+    }catch (error) {
+      console.error('Error setting up notification stream:', error);
+    }
+  }
+  module.exports = {creer,supprimer,modifier,rechercher,getall,depcat,findByid}

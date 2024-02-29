@@ -39,17 +39,29 @@ const ajoutPref = async(req, res, next) => {
             "nom":service.nom,
             "nom_categorie":service.nom_categorie
         };
+        const documents = await PrefServiceModel.find({
+            'client._id': user._id,
+            'service._id': serviceId
+        });
         
-        const moscowTime = moment().tz('Europe/Moscow').startOf('day').format('YYYY-MM-DD');
-
-        const newPrefService = new PrefServiceModel({
-            service: serviceData,
-            client: clientData,
-            note: note,
-            date: moscowTime
-         });
-         
-        await newPrefService.save();
+        if (documents.length === 0) {
+            const moscowTime = moment().tz('Europe/Moscow').startOf('day').format('YYYY-MM-DD');
+            const newPrefService = new PrefServiceModel({
+                service: serviceData,
+                client: clientData,
+                note: note,
+                date: moscowTime
+            });
+            
+            await newPrefService.save();
+        }
+        else{
+            const docid= documents[0]._id.toString();
+            const depense = await PrefServiceModel.findByIdAndUpdate(docid,{note:note}, { new: true });
+            console.log(depense);
+        }
+        
+ 
        
         return res.status(201).json({ message: 'PrefService created successfully!' });
 

@@ -14,20 +14,14 @@ const ajoutPref = async(req, res, next) => {
         if(!user){
             return res.status(404).json({ message: 'token invalide' });
         }
-        // if (!user._id || !user.nom || !user.prenom) {
-        //     // Gérez le cas où certaines propriétés sont manquantes
-        //     res.status(400).json({ message: user });
-        // } else {
-            // Créez l'objet clientData
+
             const clientData = {
                 "_id": user._id,
                 "nom": user.nom,
                 "prenom": user.prenom
             };
            
-            
-            //Continuez le processus de sauvegarde ou de traitement avec clientData
-        // }
+
        
 
         // // Find the employee info
@@ -45,15 +39,30 @@ const ajoutPref = async(req, res, next) => {
             return res.status(404).json({ message: 'employée non existante' });
         }
 
-        const newPrefEmp = new PrefEmploye({
-            employe: employeeData, 
-            client: clientData, 
-            note: note,
-            date: moscowTime,
-            service:{'_id':employeId}
-          });
-        console.log(newPrefEmp);
-        await newPrefEmp.save();
+        const documents = await PrefEmploye.find({
+            'client._id': clientId,
+            'employe._id': employeId
+        });
+        if (documents.length === 0) {
+            const newPrefEmp = new PrefEmploye({
+                employe: employeeData, 
+                client: clientData, 
+                note: note,
+                date: moscowTime,
+                service:{'_id':employeId}
+              });
+            console.log(newPrefEmp);
+            await newPrefEmp.save();
+        }
+        else{
+            const docid= documents[0]._id.toString();
+            const depense = await PrefEmploye.findByIdAndUpdate(docid,{ note:note}, { new: true });
+        }
+
+
+
+
+        
         return res.status(201).json({ message: 'PrefEmp created successfully!' });
     } catch (error) {
         //

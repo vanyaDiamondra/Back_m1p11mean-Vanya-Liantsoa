@@ -73,7 +73,8 @@ const constructRdv = (client, service, employe, date, debut, fin) => {
         date: date,
         datereservation: new Date(),
         heure_debut: debut, 
-        heure_fin: fin
+        heure_fin: fin,
+        emailEnvoye: false
     }
     return rdv;
 }
@@ -161,8 +162,15 @@ function rdvHeureChevauchent(debut1, fin1, debut2, fin2) {
 
 const emailingRdv = async (to, rdv, hour, client) => {
     try{
-        const subject = "Rappel rendez-vous Rasm, Salon de beauté (m1p11mean-Vanya-Liantsoa)";
-        const message = client.nom+" "+client.prenom+", votre rendez-vous pour "+rdv.service.nom+" est le "+rdv.date.split('T')[0]+". A bientôt, merci pour votre fidèlité";
+        const subject = "Rappel rendez-vous salon de beauté (m1p11mean-Vanya-Liantsoa)";
+        const date = rdv.heure_debut + "";
+        
+        const emailContent = `
+		<p>Bonjour ${client.nom} ${client.prenom},</p>
+		<p>Votre rendez-vous pour ${rdv.service.nom} est le <span style="color: #FFB0B0;">${date.split('T')[0]}</span></p>
+		<p>A bientôt, merci pour votre fidèlité, </p>
+		<p>© m1p11mean-Vanya-Liantsoa</p>
+		`;
 
         try {
           const transporter = nodemailer.createTransport({
@@ -180,7 +188,7 @@ const emailingRdv = async (to, rdv, hour, client) => {
             from: 'aureliekelen@gmail.com',
             to,
             subject,
-            text: message
+            html: emailContent,
           });
     
         } catch (err) {

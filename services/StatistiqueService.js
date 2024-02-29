@@ -110,8 +110,8 @@ const chiffreAffaires = async (mois) => {
       {
         $group: {
           _id: {
-            day: { $dayOfMonth: "$date" },
-            month: { $month: "$date" }, 
+            day: { $dayOfMonth: "$datereservation" },
+            month: { $month: "$datereservation" }, 
           },
           total: {
             $sum: "$service.prix"
